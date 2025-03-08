@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House Price Predictor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 50%;
+            text-align: center;
+        }
+        h2 {
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        label {
+            width: 48%;
+            margin-bottom: 10px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #result {
+            font-size: 1.2em;
+            color: #007bff;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>House Price Prediction</h2>
+        <form id="prediction-form">
+            <label>CRIM: <input type="number" step="any" id="CRIM" required></label>
+            <label>ZN: <input type="number" step="any" id="ZN" required></label>
+            <label>INDUS: <input type="number" step="any" id="INDUS" required></label>
+            <label>CHAS: <input type="number" step="any" id="CHAS" required></label>
+            <label>NOX: <input type="number" step="any" id="NOX" required></label>
+            <label>RM: <input type="number" step="any" id="RM" required></label>
+            <label>AGE: <input type="number" step="any" id="AGE" required></label>
+            <label>DIS: <input type="number" step="any" id="DIS" required></label>
+            <label>RAD: <input type="number" step="any" id="RAD" required></label>
+            <label>TAX: <input type="number" step="any" id="TAX" required></label>
+            <label>PTRATIO: <input type="number" step="any" id="PTRATIO" required></label>
+            <label>B: <input type="number" step="any" id="B" required></label>
+            <label>LSTAT: <input type="number" step="any" id="LSTAT" required></label>
+            <button type="submit">Predict</button>
+        </form>
+        <h3 id="result"></h3>
+    </div>
+    
+    <script>
+        document.getElementById("prediction-form").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            
+            const inputData = {
+                CRIM: parseFloat(document.getElementById("CRIM").value),
+                ZN: parseFloat(document.getElementById("ZN").value),
+                INDUS: parseFloat(document.getElementById("INDUS").value),
+                CHAS: parseFloat(document.getElementById("CHAS").value),
+                NOX: parseFloat(document.getElementById("NOX").value),
+                RM: parseFloat(document.getElementById("RM").value),
+                AGE: parseFloat(document.getElementById("AGE").value),
+                DIS: parseFloat(document.getElementById("DIS").value),
+                RAD: parseFloat(document.getElementById("RAD").value),
+                TAX: parseFloat(document.getElementById("TAX").value),
+                PTRATIO: parseFloat(document.getElementById("PTRATIO").value),
+                B: parseFloat(document.getElementById("B").value),
+                LSTAT: parseFloat(document.getElementById("LSTAT").value)
+            };
+            
+            const response = await fetch("http://127.0.0.1:5000/predict", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(inputData)
+            });
+            
+            const result = await response.json();
+            document.getElementById("result").innerText = "Predicted Price: " + result.predicted_price;
+        });
+    </script>
+</body>
+</html>
